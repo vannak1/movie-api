@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html ng-app="jnecMovies">
+  <head>
+
+  </head>
+  <body>
+    <div ng-controller="myServiceCtrl">
+    <h1> Service </h1>
+      Pick your Arist: <input type="text" ng-model="data.artist" placeholder="Artist" ng-change="updateArtist()">
+      <button ng-click="submitArtist()">Submit</button>
+      {{data.artistData}}
+    </div>
+
+
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.15/angular.min.js"></script>
+  </body>
+</html>

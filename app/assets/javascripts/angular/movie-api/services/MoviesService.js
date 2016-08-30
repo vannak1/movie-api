@@ -1,16 +1,36 @@
 angular.module('jnecMovies')
-  .factory('movies', [function(){
-    var o = {
-      movies: [
-        {
-          title: 'A Game of Thrones: A Song of Ice and Fire',
-          author: 'George R.R. Martin',
-          isbn: '0553593714',
-          review: 'The most inventive and entertaining fantasy saga of our time—warrants one hell of an introduction. I loved this book!',
-          rating: 4,
-          genres: { 'non-fiction': true, fantasy: true }
-        }
-      ]
-    };
-    return o;
-  }]);
+  .service('movieService', function($http, $q){
+    var baseUrl = 'https://itunes.apple.com/search?term=';
+    var _movieTitle = '';
+    var _finalUrl = '';
+
+    var makeUrl = function(){
+      _movieTitle = _movieTitle.split(' ').join('+');
+      _finalUrl = baseUrl + _movieTitle + '&entity=movie&callback=JSON_CALLBACK';
+      return _finalUrl;
+    }
+
+    this.setMovieTitle = function(movieTitle){
+      _movieTitle = movieTitle;
+      console.log(_movieTitle);
+    }
+
+    this.getMovieTitle = function(){
+      return _movieTitle;
+    }
+
+    this.callItunes = function(){
+      makeUrl();
+      console.log(_finalUrl);
+      var deferred = $q.defer();
+      $http({
+        method: 'JSONP',
+        url: _finalUrl
+      }).success(function(data){
+        deferred.resolve(data);
+      }).error(function(){
+        deferred.reject('There was an error')
+      })
+      return deferred.promise;
+    }
+});
